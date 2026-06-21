@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: expense-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-expenses}
+      POSTGRES_USER: ${DB_USER:-expense_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-expense_user} -d ${DB_NAME:-expenses}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - expense-net
+
+  backend:
+    build: ./backend
+    image: ${DOCKERHUB_USERNAME:-local}/expense-backend:latest
+    container_name: expense-backend
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-expenses}
+      DB_USER: ${DB_USER:-expense_user}
+      DB_PASSWORD: ${DB_PASSWORD:-changeme}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks:
+      - expense-net
+
+  frontend:
+    build: ./frontend
+    image: ${DOCKERHUB_USERNAME:-local}/expense-frontend:latest
+    container_name: expense-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - expense-net
+
+volumes:
+  db_data:
+
+networks:
+  expense-net:
+    driver: bridge

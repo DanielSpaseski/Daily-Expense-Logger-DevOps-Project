@@ -17,8 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          # Replace YOUR_DOCKERHUB_USERNAME with your DockerHub username.
-          image: YOUR_DOCKERHUB_USERNAME/expense-backend:latest
+          image: danielspaseski/expense-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

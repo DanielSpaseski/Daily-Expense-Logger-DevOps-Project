@@ -17,8 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          # Replace YOUR_DOCKERHUB_USERNAME with your DockerHub username.
-          image: YOUR_DOCKERHUB_USERNAME/expense-frontend:latest
+          image: danielspaseski/expense-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

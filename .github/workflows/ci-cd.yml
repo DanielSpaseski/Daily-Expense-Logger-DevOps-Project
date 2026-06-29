@@ -83,22 +83,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Optional CD step — uncomment and configure if you want to auto-deploy to a k8s cluster.
-  # deploy:
-  #   name: Deploy to Kubernetes
-  #   needs: build-and-push
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up kubectl
-  #       uses: azure/setup-kubectl@v4
-  #     - name: Configure kubeconfig
-  #       run: |
-  #         mkdir -p ~/.kube
-  #         echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
-  #     - name: Apply manifests
-  #       run: kubectl apply -f k8s/ -n expense-logger
-  #     - name: Roll new images
-  #       run: |
-  #         kubectl set image deployment/backend backend=${{ env.BACKEND_IMAGE }}:${{ github.sha }} -n expense-logger
-  #         kubectl set image deployment/frontend frontend=${{ env.FRONTEND_IMAGE }}:${{ github.sha }} -n expense-logger
